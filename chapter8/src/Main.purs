@@ -4,6 +4,7 @@ import Prelude
 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
+import Control.Monad.Except (runExcept)
 import Data.AddressBook (Address(..), Person(..), PhoneNumber(..), examplePerson)
 import Data.AddressBook.Validation (Errors, validatePerson')
 import Data.Array ((..), length, modifyAt, zipWith)
@@ -53,7 +54,7 @@ updateAppState
          | eff
          ) Unit
 updateAppState ctx update e =
-  for_ (valueOf e) \s -> do
+  for_ (runExcept $ valueOf e) \s -> do
     let newPerson = update s
 
     log "Running validators"
