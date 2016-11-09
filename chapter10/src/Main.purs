@@ -6,6 +6,7 @@ import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Alert (ALERT, alert)
 import Control.Monad.Eff.Console (CONSOLE, log)
 import Control.Monad.Eff.Storage (STORAGE, setItem, getItem)
+import Control.Monad.Except (runExcept)
 import Data.AddressBook (Address(..), Person(..), PhoneNumber(..), PhoneType(..), phoneNumber, address, person, examplePerson)
 import Data.AddressBook.Validation (Errors, validatePerson')
 import Data.Array ((..), length, modifyAt, zipWith)
@@ -116,7 +117,7 @@ loadSavedData = do
       jsonOrNull <- read item
       traverse readJSON (unNull jsonOrNull)
 
-  case savedData of
+  case runExcept $ savedData of
     Left err -> do
       alert $ "Unable to read saved form data: " <> show err
       pure Nothing
@@ -157,7 +158,7 @@ updateAppState
 updateAppState ctx update e = do
   val <- readState ctx
 
-  for_ (valueOf e) \s -> do
+  for_ (runExcept $ valueOf e) \s -> do
     let newPerson = update s
 
     log "Running validators"
