@@ -14,7 +14,7 @@ import Data.GameEnvironment (GameEnvironment, gameEnvironment)
 
 import Data.GameState (GameState, initialGameState)
 import Data.Maybe (Maybe(..))
-import Data.String (split)
+import Data.String (Pattern(..), split)
 import Game (game)
 import Node.ReadLine as RL
 
@@ -43,7 +43,7 @@ runGame env = do
              | eff
              ) Unit
     lineHandler currentState input = do
-      case runRWS (game (split " " input)) env currentState of
+      case runRWS (game (split (Pattern " ") input)) env currentState of
         RWSResult state _ written -> do
           for_ written log
           RL.setLineHandler interface $ lineHandler state

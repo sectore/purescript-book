@@ -2,8 +2,7 @@ module Game where
 
 import Prelude
 
-import Control.Monad.RWS (RWS)
-import Control.Monad.RWS.Class (tell, get, ask, modify, put)
+import Control.Monad.RWS (RWS, tell, get, ask, modify, put)
 import Data.Coords (Coords(..), prettyPrintCoords, coords)
 import Data.Foldable (for_)
 import Data.GameEnvironment (GameEnvironment(..))
